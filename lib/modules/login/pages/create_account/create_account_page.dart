@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/modules/login/create_account_controller.dart';
 import 'package:flutterapp/shared/theme/app_theme.dart';
 import 'package:flutterapp/shared/widgets/button/button.dart';
 import 'package:flutterapp/shared/widgets/input_text/input_text.dart';
+import 'package:validators/validators.dart';
 
-class CreateAccountPage extends StatelessWidget {
+class CreateAccountPage extends StatefulWidget {
   const CreateAccountPage({Key? key}) : super(key: key);
 
+  @override
+  State<CreateAccountPage> createState() => _CreateAccountPageState();
+}
+
+class _CreateAccountPageState extends State<CreateAccountPage> {
+  final controller = CreateAccountController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,37 +27,59 @@ class CreateAccountPage extends StatelessWidget {
       backgroundColor: AppTheme.colors.background,
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Criando uma conta",
-              style: AppTheme.textStyles.title,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              "Mantenha seus gastos em dia",
-              style: AppTheme.textStyles.subtitle,
-            ),
-            SizedBox(
-              height: 38,
-            ),
-            InputText(label: "Nome completo", hint: "Digite seu nome completo"),
-            SizedBox(height: 18),
-            InputText(label: "E-mail", hint: "Digite seu email"),
-            SizedBox(height: 18),
-            InputText(label: "Senha", obscure: true, hint: "Digite sua senha"),
-            SizedBox(height: 14),
-            Button(
-              label: "Criar conta",
-              onTap: () {
-                print("Criar conta");
-              },
-            )
-          ],
+        child: Form(
+          key: controller.formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Criando uma conta",
+                style: AppTheme.textStyles.title,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                "Mantenha seus gastos em dia",
+                style: AppTheme.textStyles.subtitle,
+              ),
+              SizedBox(
+                height: 38,
+              ),
+              InputText(
+                label: "Nome completo",
+                hint: "Digite seu nome completo",
+                validator: (value) =>
+                    value.isNotEmpty ? null : "Digite um nome válido",
+                onChanged: (value) => controller.onChange(name: value),
+              ),
+              SizedBox(height: 18),
+              InputText(
+                label: "E-mail",
+                hint: "Digite seu email",
+                validator: (value) =>
+                    isEmail(value) ? null : "Digite um email válido",
+                onChanged: (value) => controller.onChange(email: value),
+              ),
+              SizedBox(height: 18),
+              InputText(
+                label: "Senha",
+                obscure: true,
+                hint: "Digite sua senha",
+                validator: (value) =>
+                    value.length >= 6 ? null : "Digite uma senha mais forte",
+                onChanged: (value) => controller.onChange(password: value),
+              ),
+              SizedBox(height: 14),
+              Button(
+                label: "Criar conta",
+                onTap: () {
+                  controller.create();
+                },
+              )
+            ],
+          ),
         ),
       ),
     );
