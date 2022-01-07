@@ -9,6 +9,13 @@ class CreateAccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppTheme.colors.background,
+        leading: BackButton(
+          color: AppTheme.colors.backButton,
+        ),
+        elevation: 0,
+      ),
       backgroundColor: AppTheme.colors.background,
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
@@ -34,7 +41,7 @@ class CreateAccountPage extends StatelessWidget {
             SizedBox(height: 18),
             InputText(label: "E-mail", hint: "Digite seu email"),
             SizedBox(height: 18),
-            InputText(label: "Senha", hint: "Digite sua senha"),
+            InputText(label: "Senha", obscure: true, hint: "Digite sua senha"),
             SizedBox(height: 14),
             Button(
               label: "Criar conta",
