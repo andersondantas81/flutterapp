@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterapp/modules/login/create_account_controller.dart';
+import 'package:flutterapp/modules/login/pages/create_account/create_account_controller.dart';
 import 'package:flutterapp/shared/theme/app_theme.dart';
 import 'package:flutterapp/shared/widgets/button/button.dart';
 import 'package:flutterapp/shared/widgets/input_text/input_text.dart';
@@ -14,6 +14,30 @@ class CreateAccountPage extends StatefulWidget {
 
 class _CreateAccountPageState extends State<CreateAccountPage> {
   final controller = CreateAccountController();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    controller.addListener(() {
+      controller.state.when(
+          success: (value) => print(value),
+          error: (message, _) => scaffoldKey.currentState!
+              .showBottomSheet((context) => BottomSheet(
+                  onClosing: () {},
+                  builder: (context) => Container(
+                        child: Text(message),
+                      ))),
+          orElse: () {});
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,12 +96,20 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                 onChanged: (value) => controller.onChange(password: value),
               ),
               SizedBox(height: 14),
-              Button(
-                label: "Criar conta",
-                onTap: () {
-                  controller.create();
-                },
-              )
+              AnimatedBuilder(
+                  animation: controller,
+                  builder: (_, __) => controller.state.when(
+                      loading: () => Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(),
+                            ],
+                          ),
+                      orElse: () => Button(
+                          label: "Criar conta",
+                          onTap: () {
+                            controller.create();
+                          })))
             ],
           ),
         ),

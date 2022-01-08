@@ -13,10 +13,35 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final controller = LoginController();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    controller.addListener(() {
+      controller.state.when(
+          success: (value) => Navigator.pushNamed(context, "/home"),
+          error: (message, _) => scaffoldKey.currentState!
+              .showBottomSheet((context) => BottomSheet(
+                  onClosing: () {},
+                  builder: (contex) => Container(
+                        child: Text(message),
+                      ))),
+          orElse: () {});
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     //final size = MediaQuery.of(context).size;
     return Scaffold(
+      key: scaffoldKey,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
@@ -47,25 +72,35 @@ class _LoginPageState extends State<LoginPage> {
                   onChanged: (value) => controller.onChange(password: value),
                 ),
                 SizedBox(height: 14),
-                Button(
-                  label: "Entrar",
-                  onTap: () {
-                    controller.login();
-                  },
-                ),
-                SizedBox(height: 50),
-                Button(
-                  label: "Criar conta",
-                  onTap: () {
-                    Navigator.pushNamed(context, "/login/create-account");
+                AnimatedBuilder(
+                    animation: controller,
+                    builder: (_, __) => controller.state.when(
+                          loading: () => CircularProgressIndicator(),
+                          orElse: () => Column(
+                            children: [
+                              Button(
+                                label: "Entrar",
+                                onTap: () {
+                                  controller.login();
+                                },
+                              ),
+                              SizedBox(height: 50),
+                              Button(
+                                label: "Criar conta",
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, "/login/create-account");
 
-                    /*Navigator.push(
+                                  /*Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => CreateAccountPage()));*/
-                  },
-                  type: ButtonType.outline,
-                )
+                                },
+                                type: ButtonType.outline,
+                              )
+                            ],
+                          ),
+                        )),
               ],
             ),
           ),

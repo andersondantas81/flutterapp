@@ -1,3 +1,4 @@
+import 'package:flutterapp/modules/home/home_page.dart';
 import 'package:flutterapp/modules/login/pages/create_account/create_account_page.dart';
 import 'package:flutterapp/modules/splash/splash_page.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class AppWidget extends StatelessWidget {
         "/splash": (context) => const SplashWidget(),
         "/login": (context) => const LoginPage(),
         "/login/create-account": (context) => const CreateAccountPage(),
+        "/home": (context) => const HomePage(),
       },
     );
   }
