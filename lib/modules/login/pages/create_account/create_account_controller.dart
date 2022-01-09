@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutterapp/shared/services/app_database.dart';
 import 'package:flutterapp/shared/utils/app_state.dart';
 
 class CreateAccountController extends ChangeNotifier {
@@ -32,7 +33,8 @@ class CreateAccountController extends ChangeNotifier {
     if (validator()) {
       try {
         update(AppState.loading());
-        await Future.delayed(Duration(seconds: 3));
+        await AppDatabase.instance
+            .createAccount(name: _name, email: _email, password: _password);
         update(AppState.success<String>("Cadastro realizado com sucesso."));
       } catch (e) {
         update(AppState.error("Não foi possível criar conta"));

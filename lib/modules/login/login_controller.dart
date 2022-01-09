@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/shared/services/app_database.dart';
 import 'package:flutterapp/shared/utils/app_state.dart';
 
 class LoginController extends ChangeNotifier {
@@ -31,7 +32,7 @@ class LoginController extends ChangeNotifier {
     if (validator()) {
       try {
         update(AppState.loading());
-        await Future.delayed(Duration(seconds: 4));
+        await AppDatabase.instance.login(email: _email, password: _password);
         update(AppState.success<String>("Usuário logado"));
       } catch (e) {
         update(AppState.error("Não foi possível realizar login"));

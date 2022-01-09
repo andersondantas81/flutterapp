@@ -7,7 +7,11 @@
     {
       "name": "fluttersapp",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "args": [
+        "--dart-define","SUPABASEURL=https://zqkdfnzselljkegzkpjg.supabase.co",
+        "--dart-define","SUPABASEKEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MTczNjk5NCwiZXhwIjoxOTU3MzEyOTk0fQ.uwDV9-c21dzo84_PeXyfDFi2zpf8RpmRO5SAcKAVTTc"
+      ]
     },
     {
       "name": "flutterapp (profile mode)",
